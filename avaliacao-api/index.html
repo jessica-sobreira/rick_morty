@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Rick and Morty</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+
+  <head>
+    <h1>API de Rick & Morty</h1>
+  </head>
+
+  <main>
+    <div id="personagens-lista">
+    </div>
+  </main>
+
+  <img src="./rm.png" id="footer-desenho" alt="Rick & Morty desenho">
+
+  <div class="botao">
+    <button id="anterior" onclick="voltarPagina()">Anterior
+    </button>
+    <button id="proximo" onclick="avancarPagina()">Próximo
+    </button>
+  </div>
+
+  <footer>
+    <ul class="footer-dados">
+      <li>Personagens: 826</li>
+      <li>Localizações: 126</li>
+      <li>Episódios: 51</li>
+    </ul>
+    <br><br><br>
+    <p>Desenvolvido por: <strong> Jéssica Sobreira </strong> em 2023.</p>
+  </footer>
+  <script>
+    const personagensLista = document.getElementById('personagens-lista');
+
+    axios.get('https://rickandmortyapi.com/api/character')
+      .then(response => {
+        if (response.status === 200) {
+          const characters = response.data.results;
+
+          characters.forEach(character => {
+            const characterDiv = document.createElement('div');
+            characterDiv.classList.add('personagem');
+
+            characterDiv.innerHTML = `
+            <div class="personagem-card">
+              <div class="personagem-imagem">
+                <img src="${character.image}" alt="${character.name}">
+              </div>
+              <div class="personagem-info">
+                <h2>${character.name}</h2>
+                <p>Status: ${character.status}</p>
+                <p>Espécie: ${character.species}</p>
+                <p>Gênero: ${character.gender}</p>
+                <p>Last known location:<br> ${character.origin.name}</p>
+                <p>First seen in:<br> ${character.location.name}</p>
+              </div>
+            </div>
+            `;
+
+            personagensLista.appendChild(characterDiv);
+          });
+        } else {
+          console.log('Algo deu errado:', response.status);
+        }
+      })
+      .catch(error => {
+        console.error('Erro na requisição:', error);
+      });
+  </script>
+  <script src="./scripts.js"></script>
+</body>
+
+</html>
